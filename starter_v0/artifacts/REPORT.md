@@ -1,130 +1,68 @@
-# Day 03 Lab v2 Report — Research Agent
+# Research Agent Lab Report
 
-> File này gồm 2 phần, deadline khác nhau:
-> - **PHẦN A — Giới thiệu agent**: ngắn gọn 1 trang để team khác hiểu nhanh agent có tool gì, làm được gì, thử bằng câu hỏi nào. **Xong trước 16:30** để làm tài liệu phụ trợ khi demo. Có thể làm thành poster HTML/SVG (`artifacts/poster.html` / `poster.svg`) để show cho team cùng zone.
-> - **PHẦN B — Chi tiết / Bằng chứng**: bảng đầy đủ (v0–v3, failure, eval, chat) dựa trên log thật. **Có thể hoàn thiện sau buổi debate để nộp bài.**
+## A — Agent
 
-## Team
+Team/member: user to fill in.
 
-- Team:
-- Members:
-- Provider/model:
+9router research assistant: web/social discovery, URL reading, policy retrieval, arXiv discovery and reading, digest formatting, and local word counting.
+New tool: word_count. Counts whitespace-separated words and Python string characters; it does not claim linguistic Vietnamese word segmentation.
+UI: Streamlit app.py. Local URL http://localhost:8501. Public deploy URL: pending; no public deployment has been performed.
+Examples: Đếm số từ trong đoạn: AI tools help research; Theo policy công ty có được đưa API key vào prompt không?; Tin robotics hôm nay?
+Telegram sending is disabled in the UI. The original CLI still relies on model-supplied confirmed=true; this is not a server-side proof of approval.
 
----
+## B — Evidence
 
-# PHẦN A — Giới thiệu agent
-
-## A1. Agent này làm được gì
-
-> 1–2 câu mô tả agent dùng để làm gì (cho team khác hiểu nhanh).
-
-Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc URL, tổng hợp thành digest, và gửi lên Telegram khi được xác nhận."
-
-**Link dùng thử (deploy):**
-
-> Dán link public để team khác mở thử ngay. Cách deploy nhanh bằng Cloudflare Tunnel xem README. Nếu deploy Vercel/Streamlit Cloud thì dán link đó.
->
-> URL: 
-
-## A2. Tool agent có
-
-> Liệt kê các tool agent đang dùng (gồm tool mới nhóm tự thêm). Mỗi tool 1 dòng: tên + làm được gì.
-
-| Tên tool | Làm được gì | Tool mới nhóm thêm? |
-|---|---|---|
-| clarify | hỏi lại người dùng khi thiếu thông tin | không |
-|  |  |  |
-|  |  |  |
-
-## A3. Câu hỏi mẫu để thử
-
-> 3–5 câu hỏi/yêu cầu mẫu để team khác tự thử agent ngay.
-
-1.
-2.
-3.
-
----
-
-# PHẦN B — Chi tiết / Bằng chứng
-
-## B1. Version Evidence
-
-Fill from `artifacts/version_log.csv` and `runs/*.json`.
-
-| Version | Changed Artifact | Hypothesis | Metric Before | Metric After | Run File |
-|---|---|---|---:|---:|---|
-| v0 | baseline |  |  |  |  |
-| v1 |  |  |  |  |  |
-| v2 |  |  |  |  |  |
-| v3 |  |  |  |  |  |
-
-## B2. Failure Analysis
-
-Use actual failures from `results[*].result.failures`.
-
-| Case ID | Failure Type | Actual Tool Calls | What Failed | Fix |
-|---|---|---|---|---|
-|  |  |  |  |  |
-
-## B3. Team Eval Cases
-
-List the 10 cases added to `data/eval_group.json` (5 single turn + 5 multi turn).
-
-| Case ID | What It Tests | Expected Tool/Behavior | Result |
-|---|---|---|---|
-|  |  |  |  |
-
-## B4. Live Chat Evidence
-
-Use `transcripts/*.transcript.json`.
-
-| Turn | User Request | Tool Calls | Version Evidence | Outcome |
-|---|---|---|---|---|
-|  |  |  |  |  |
-
-## B5. Bonus Evidence
-
-Only fill if your team did bonus.
-
-| Bonus | Evidence File | What Worked | Risk / Guardrail |
-|---|---|---|---|
-| send (Telegram) |  |  |  |
-| arXiv/company policy |  |  |  |
-| UI |  |  |  |
-| Tool unit tests (`tests/`) | `pytest` output |  |  |
-
-Tool unit tests: số test đã viết, số bug tìm được trong tool có sẵn (nếu có), và một ví dụ lỗi mà unit test bắt được nhưng eval không bắt được.
-
-## B6. Reflection
-
-- Which fixes belonged in `system_prompt.md`?
-- Which fixes belonged in `tools.yaml`?
-- Which failure needed manual review instead of automatic grading?
-- What would you improve next?
-
-## B7. Small Local Model Challenge (bonus)
-
-Only fill if your team did the local model challenge.
-
-| Version | Model (provider) | Prompt/Tools | case_accuracy | tool_routing | argument | multiturn | Run File |
+|Version|Model|Passed|Case accuracy|Routing|Arguments|Multi-turn|Run|
 |---|---|---|---|---|---|---|---|
-| v3 | (cloud) | v3 |  |  |  |  |  |
-| v3-... | (ollama) | v3 |  |  |  |  |  |
-| v3-... | (ollama) | v3 |  |  |  |  |  |
-| v4-local |  |  |  |  |  |  |  |
-| v5-local |  |  |  |  |  |  |  |
+|v0|ag/gemini-3.8-flash-low|14/20|0.7|0.85|0.7|0.8333|runs/v0_B_base_9router_20261110T154203100221.json|
+|v1|ag/gemini-3.8-flash-low|16/20|0.8|1.0|0.8|0.8333|runs/v1_B_base_9router_20261110T155342376772.json|
+|v2|ag/gemini-3.8-flash-low|19/20|0.95|1.0|0.95|1.0|runs/v2_B_base_9router_20261110T155351704644.json|
+|v3|ag/gemini-3.8-flash-low|19/20|0.95|1.0|0.95|1.0|runs/v3_B_base_9router_20261110T155404909586.json|
 
-Lỗi đặc thù của model nhỏ (đếm từ run JSON):
+Hypotheses:
+- v0: Original starter baseline
+- v1: Explicit routing, clarification, action confirmation and independent source calls
+- v2: Concise topic queries and explicit time/social argument conventions
+- v3: Latest-turn corrections and preserved conversation slots
 
-| Failure Pattern | Count | Example Case | Fix Tried | Helped? |
-|---|---|---|---|---|
-| wrong / hallucinated tool |  |  |  |  |
-| invalid JSON args (`_invalid_json_arguments`) |  |  |  |  |
-| no tool call / answered directly |  |  |  |  |
-| missed `clarify` |  |  |  |  |
-| repeated / unnecessary calls |  |  |  |  |
+### Failed cases and tool errors
 
-- Cái gì giúp model nhỏ gọi tool đúng hơn nhất? Bằng chứng?
-- Bản prompt tối ưu cho local chạy trên model cloud thì sao?
-- Khi nào nhóm sẽ chọn model local thay vì cloud cho agent này?
+Routing scores ignore tool execution results. API failures must be interpreted separately.
+Provider errors are excluded by the original evaluator from accuracy denominators.
+Multi-turn eval flattens user turns into one message; it does not prove the complete chat state machine.
+
+- v0 failures: R03_web_news_routing: query: expected 'AI', got 'tin tức trí tuệ nhân tạo AI mới nhất hôm nay' / R10_missing_handle: missing tool call clarify; extra tool call timeline / R11_missing_url: missing tool call clarify; extra tool call fetch / R12_confirm_before_send: response_type: expected 'yes_no', got 'text' / R13_parallel_web_and_tweets: query: expected 'AI', got 'AI news today'; missing tool call social_search / M02_carryover_timeframe: query: expected 'robotics', got 'robotics news'
+- v0 tool execution errors: {'RuntimeError': 16}
+- v1 failures: R03_web_news_routing: query: expected 'AI', got 'artificial intelligence news today' / R12_confirm_before_send: response_type: expected 'yes_no', got 'text' / R13_parallel_web_and_tweets: query: expected 'AI', got 'AI news' / M02_carryover_timeframe: query: expected 'robotics', got 'robotics news'
+- v1 tool execution errors: {'RuntimeError': 15}
+- v2 failures: R12_confirm_before_send: response_type: expected 'yes_no', got 'text'
+- v2 tool execution errors: {'RuntimeError': 15}
+- v3 failures: R12_confirm_before_send: response_type: expected 'yes_no', got 'text'
+- v3 tool execution errors: {'RuntimeError': 15}
+
+### Group eval — runs/v3_B_group_9router_20261110T155309188931.json
+
+|Case|What it tests|Result|
+|---|---|---|
+|G01_word_count|Đếm số từ trong đoạn: AI tools help research|PASS|
+|G02_unknown_account|Lấy 4 tweet mới nhất giúp tôi|PASS|
+|G03_url|Đọc https://example.com/research|PASS|
+|G04_policy|Tìm policy công ty về dữ liệu khách hàng|PASS|
+|G05_social_top|Tìm tweet phổ biến nhất về robotics|PASS|
+|G06_count_correction|Latest correction changes count|PASS|
+|G07_handle_correction|Latest account correction wins|PASS|
+|G08_time_carryover|Preserve timeframe on topic change|PASS|
+|G09_url_fill|URL supplied after missing information|PASS|
+|G10_count_carryover|Preserve count on account change|PASS|
+
+### Live chat transcripts
+
+- transcripts/v3_9router_20261110T155328283829.transcript.json: 3 turns; inspect statuses and tool events.
+
+### Reflection
+
+Routing, missing information, confirmation and conversation context belong in the prompt. Input conventions belong in tool declarations; existing base declarations were preserved at the user's request.
+v1–v3 use the same tools declarations and model; accuracy changes on this small dataset are not statistical proof and should be checked against the group suite.
+No automatic scoring of answer correctness, citations, confirmation provenance or source truth is supplied by the base evaluator.
+See LAB_RUN.md for installation and demo commands. Public hosting and team identity require user completion.
+Unit-test and UI verification evidence: artifacts/VERIFICATION.md. Run pytest -q and python3 scripts/check_ui.py to reproduce.

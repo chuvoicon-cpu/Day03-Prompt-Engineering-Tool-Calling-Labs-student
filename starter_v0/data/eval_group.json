@@ -3,5 +3,246 @@
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+  {
+    "id": "G01_word_count",
+    "phase": "B",
+    "failure_type": "wrong_arg_value",
+    "query": "Đếm số từ trong đoạn: AI tools help research",
+    "expect": {
+      "tool_calls": [
+        {
+          "name": "word_count",
+          "args": {
+            "text": "AI tools help research"
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "what_it_tests": "Đếm số từ trong đoạn: AI tools help research"
+    }
+  },
+  {
+    "id": "G02_unknown_account",
+    "phase": "B",
+    "failure_type": "missing_info",
+    "query": "Lấy 4 tweet mới nhất giúp tôi",
+    "expect": {
+      "tool_calls": [
+        {
+          "name": "clarify",
+          "args": {
+            "response_type": "text"
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "what_it_tests": "Lấy 4 tweet mới nhất giúp tôi"
+    }
+  },
+  {
+    "id": "G03_url",
+    "phase": "B",
+    "failure_type": "wrong_arg_value",
+    "query": "Đọc https://example.com/research",
+    "expect": {
+      "tool_calls": [
+        {
+          "name": "fetch",
+          "args": {
+            "url": "https://example.com/research"
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "what_it_tests": "Đọc https://example.com/research"
+    }
+  },
+  {
+    "id": "G04_policy",
+    "phase": "B",
+    "failure_type": "wrong_arg_value",
+    "query": "Tìm policy công ty về dữ liệu khách hàng",
+    "expect": {
+      "tool_calls": [
+        {
+          "name": "policy",
+          "args": {
+            "policy_area": "data_privacy"
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "what_it_tests": "Tìm policy công ty về dữ liệu khách hàng"
+    }
+  },
+  {
+    "id": "G05_social_top",
+    "phase": "B",
+    "failure_type": "wrong_arg_value",
+    "query": "Tìm tweet phổ biến nhất về robotics",
+    "expect": {
+      "tool_calls": [
+        {
+          "name": "social_search",
+          "args": {
+            "query": "robotics",
+            "search_type": "Top"
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "what_it_tests": "Tìm tweet phổ biến nhất về robotics"
+    }
+  },
+  {
+    "id": "G06_count_correction",
+    "phase": "B",
+    "failure_type": "wrong_arg_value",
+    "turns": [
+      {
+        "role": "user",
+        "content": "Đếm số từ trong đoạn: AI tools help research"
+      },
+      {
+        "role": "user",
+        "content": "Đổi lại, chỉ đếm đoạn: AI agents"
+      }
+    ],
+    "expect": {
+      "tool_calls": [
+        {
+          "name": "word_count",
+          "args": {
+            "text": "AI agents"
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "what_it_tests": "Latest correction changes count"
+    }
+  },
+  {
+    "id": "G07_handle_correction",
+    "phase": "B",
+    "failure_type": "wrong_arg_value",
+    "turns": [
+      {
+        "role": "user",
+        "content": "Lấy 2 tweet của Elon Musk"
+      },
+      {
+        "role": "user",
+        "content": "À nhầm, của Andrej Karpathy"
+      }
+    ],
+    "expect": {
+      "tool_calls": [
+        {
+          "name": "timeline",
+          "args": {
+            "screenname": "karpathy",
+            "limit": 2
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "what_it_tests": "Latest account correction wins"
+    }
+  },
+  {
+    "id": "G08_time_carryover",
+    "phase": "B",
+    "failure_type": "wrong_arg_value",
+    "turns": [
+      {
+        "role": "user",
+        "content": "Tìm tin AI trong tuần này"
+      },
+      {
+        "role": "user",
+        "content": "Chuyển sang robotics, vẫn tuần này"
+      }
+    ],
+    "expect": {
+      "tool_calls": [
+        {
+          "name": "lookup",
+          "args": {
+            "query": "robotics",
+            "topic": "news",
+            "timeframe": "week"
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "what_it_tests": "Preserve timeframe on topic change"
+    }
+  },
+  {
+    "id": "G09_url_fill",
+    "phase": "B",
+    "failure_type": "wrong_arg_value",
+    "turns": [
+      {
+        "role": "user",
+        "content": "Tóm tắt bài này"
+      },
+      {
+        "role": "user",
+        "content": "Đây là link: https://example.com/paper"
+      }
+    ],
+    "expect": {
+      "tool_calls": [
+        {
+          "name": "fetch",
+          "args": {
+            "url": "https://example.com/paper"
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "what_it_tests": "URL supplied after missing information"
+    }
+  },
+  {
+    "id": "G10_count_carryover",
+    "phase": "B",
+    "failure_type": "wrong_arg_value",
+    "turns": [
+      {
+        "role": "user",
+        "content": "Lấy 3 tweet của Elon Musk"
+      },
+      {
+        "role": "user",
+        "content": "Thay bằng Sam Altman"
+      }
+    ],
+    "expect": {
+      "tool_calls": [
+        {
+          "name": "timeline",
+          "args": {
+            "screenname": "sama",
+            "limit": 3
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "what_it_tests": "Preserve count on account change"
+    }
+  }
+]
 }
